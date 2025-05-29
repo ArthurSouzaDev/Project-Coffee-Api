@@ -54,16 +54,27 @@ class CreateCoffeeDto {
   DataCriada: Date;
 }
 
-@Controller()
+@Controller('/coffees')
 export class AppController {
   constructor(private readonly appService: AppService) {}
 
-  @Get('/coffees')
+  @Get('/')
   getCoffees(): Coffee[] {
     return this.appService.getCoffees();
   }
 
-  @Post('/coffee-create')
+  @Get('detalhes')
+  getCoffeesByDateRange(
+    @Query('Start_Date') start: string,
+    @Query('End_Date') end: string,
+  ) {
+    const s = new Date(start);
+    const e = new Date(end);
+    console.log(`Start Date: ${s}, End Date: ${e}`);
+    return this.appService.getCoffeesByDateRange(s, e);
+  }
+
+  @Post('coffee-create')
   createCoffee(@Body() body: any) {
     const dto = plainToInstance(CreateCoffeeDto, body);
     const errors = validateSync(dto);
@@ -81,7 +92,7 @@ export class AppController {
     };
   }
 
-  @Get('/coffees/:id')
+  @Get('/:id')
   getCoffeeById(@Param('id') id: string) {
     return this.appService.getCoffeeById(id);
   }

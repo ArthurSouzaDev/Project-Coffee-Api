@@ -14,6 +14,7 @@ export interface Coffee {
 @Injectable()
 export class AppService {
   private coffees: Coffee[] = [
+    
     {
       nome: 'Paraíso',
       tipo: 'Forte',
@@ -22,7 +23,7 @@ export class AppService {
       id: '22',
       descricao: 'Café encorpado com notas intensas de cacau e aroma marcante.',
       tags: ['intenso', 'cacau', 'tradicional'],
-      DataCriada: new Date('2025-05-26'),
+      DataCriada: new Date('05-25-2025'),
     },
     {
       nome: 'Montanha Azul',
@@ -32,7 +33,7 @@ export class AppService {
       id: '23',
       descricao: 'Café leve com aroma floral e acidez equilibrada.',
       tags: ['leve', 'floral'],
-      DataCriada: new Date('2025-05-26'),
+      DataCriada: new Date('05-27-2025'),
     },
   ];
 
