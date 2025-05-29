@@ -1,8 +1,23 @@
-import { Body, Controller, Get, Param, Post, BadRequestException } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  Param,
+  Post,
+  BadRequestException,
+  Query,
+} from '@nestjs/common';
 import { AppService, Coffee } from './app.service';
-import { IsString, IsNotEmpty, IsOptional, IsNumber, IsArray, validateSync } from 'class-validator';
-import { plainToInstance } from 'class-transformer';
-
+import {
+  IsString,
+  IsNotEmpty,
+  IsOptional,
+  IsNumber,
+  IsArray,
+  validateSync,
+  IsDate,
+} from 'class-validator';
+import { plainToInstance, Type } from 'class-transformer';
 
 class CreateCoffeeDto {
   @IsString()
@@ -33,6 +48,10 @@ class CreateCoffeeDto {
   @IsArray()
   @IsString({ each: true })
   tags?: string[];
+
+  @Type(() => Date)
+  @IsDate()
+  DataCriada: Date;
 }
 
 @Controller()
@@ -44,23 +63,26 @@ export class AppController {
     return this.appService.getCoffees();
   }
 
-  @Get('/coffees/:id/detalhes')
-    getCoffee(@Param('id') id: string) {
-      return this.appService.getCoffeeById(id);
+  @Post('/coffee-create')
+  createCoffee(@Body() body: any) {
+    const dto = plainToInstance(CreateCoffeeDto, body);
+    const errors = validateSync(dto);
+
+    if (errors.length > 0) {
+      throw new BadRequestException(
+        'Campos obrigatórios faltando ou inválidos',
+      );
     }
-    @Post('/coffee-create')
-    createCoffee(@Body() body: any) {
-      const dto = plainToInstance(CreateCoffeeDto, body);
-      const errors = validateSync(dto);
-  
-      if (errors.length > 0) {
-        throw new BadRequestException('Campos obrigatórios faltando ou inválidos');
-      }
-  
-      const created = this.appService.createCoffee(dto);
-      return {
-        message: 'Café criado com sucesso',
-        cafe: created,
-      };
-    }
+
+    const created = this.appService.createCoffee(dto);
+    return {
+      message: 'Café criado com sucesso',
+      cafe: created,
+    };
+  }
+
+  @Get('/coffees/:id')
+  getCoffeeById(@Param('id') id: string) {
+    return this.appService.getCoffeeById(id);
+  }
 }
