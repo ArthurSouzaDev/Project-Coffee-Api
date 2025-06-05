@@ -1,29 +1,63 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
-
 generator client {
   provider = "prisma-client-js"
-  output   = "../generated/prisma"
 }
 
 datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
 }
-model ClasseDeAula {
+
+model Cliente {
   id        Int     @id @default(autoincrement())
   nome      String
-  descricao String
-  alunos    Aluno[]
+  email     String  @unique
+  cpf       String  @unique
+  telefone  String
+  pedidos   Pedido[]
 }
 
-model Aluno {
-  id             Int           @id @default(autoincrement())
-  nome           String
-  email          String        @unique
-  classeDeAulaId Int
-  classeDeAula   ClasseDeAula  @relation(fields: [classeDeAulaId], references: [id])
+model Cafe {
+  id          Int           @id @default(autoincrement())
+  nome        String
+  tipo        String
+  preco       Float
+  descricao   String
+  tags        TagCafe[]
+  itensPedido ItemPedido[]
+}
+
+model TagCafe {
+  id      Int    @id @default(autoincrement())
+  nome    String
+  cafeId  Int
+  cafe    Cafe   @relation(fields: [cafeId], references: [id])
+}
+
+model Pedido {
+  id            Int          @id @default(autoincrement())
+  clienteId     Int
+  cliente       Cliente      @relation(fields: [clienteId], references: [id])
+  dataPedido    DateTime     @default(now())
+  total         Float
+  entrega       Entrega?
+  itensPedido   ItemPedido[]
+}
+
+model ItemPedido {
+  id         Int     @id @default(autoincrement())
+  cafeId     Int
+  pedidoId   Int
+  quantidade Int
+  precoUnit  Float
+  cafe       Cafe    @relation(fields: [cafeId], references: [id])
+  pedido     Pedido  @relation(fields: [pedidoId], references: [id])
+}
+
+model Entrega {
+  id            Int      @id @default(autoincrement())
+  endereco      String
+  status        String   // pendente, em_transito, entregue
+  dataPrevista  DateTime
+  pedidoId      Int      @unique
+  pedido        Pedido   @relation(fields: [pedidoId], references: [id])
 }
