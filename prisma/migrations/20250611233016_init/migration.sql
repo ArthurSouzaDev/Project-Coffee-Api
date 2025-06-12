@@ -1,19 +1,3 @@
-/*
-  Warnings:
-
-  - You are about to drop the `Aluno` table. If the table is not empty, all the data it contains will be lost.
-  - You are about to drop the `ClasseDeAula` table. If the table is not empty, all the data it contains will be lost.
-
-*/
--- DropForeignKey
-ALTER TABLE "Aluno" DROP CONSTRAINT "Aluno_classeDeAulaId_fkey";
-
--- DropTable
-DROP TABLE "Aluno";
-
--- DropTable
-DROP TABLE "ClasseDeAula";
-
 -- CreateTable
 CREATE TABLE "Cliente" (
     "id" SERIAL NOT NULL,

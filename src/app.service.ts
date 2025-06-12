@@ -40,6 +40,9 @@ export class AppService {
   getCoffees(): Coffee[] {
     return this.coffees;
   }
+  getCoffeesTop3(): Coffee[]{
+    return this.coffees;
+  }
 
   getCoffeesByDateRange(start: Date, end: Date): Coffee[] {
     return this.coffees.filter(
